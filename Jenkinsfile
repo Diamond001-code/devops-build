@@ -30,3 +30,26 @@ pipeline {
         }
     }
 }
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_CREDENTIALS = credentials('docker-hub-credentials')  // Reference the ID of the credentials you added
+    }
+
+    stages {
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    // Login to Docker Hub
+                    sh "echo $DOCKER_CREDENTIALS_PSWD | docker login --username $DOCKER_CREDENTIALS_USR --password-stdin"
+
+                    // Build Docker image
+                    sh './build.sh'
+                }
+            }
+        }
+
+        // Add other stages for push and deployment here...
+    }
+}
