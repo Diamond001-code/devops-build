@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set variables
-IMAGE_NAME="karthiksivakumar0114/dev"   # Replace with your Docker Hub username and repository
+IMAGE_NAME="karthiksivakumar0114/prod"   # Replace with your Docker Hub username and repository
 TAG="latest"                        
 
 # Build the Docker image
