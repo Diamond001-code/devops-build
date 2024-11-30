@@ -12,7 +12,7 @@ pipeline {
                     // Login to Docker Hub
                     sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login --username $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
 
-                    // Build Docker image
+                    
                     bat '"C:\\Program Files\\Git\\bin\\bash.exe" ./build.sh'
                 }
             }
