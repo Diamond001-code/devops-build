@@ -2,10 +2,17 @@
 
 # Set variables
 IMAGE_NAME="karthiksivakumar0114/dev"   # Replace with your Docker Hub username and repository
-TAG="latest"                        # Change the tag if needed
+TAG="latest"                        
 DOCKER_COMPOSE_FILE="docker-compose.yml"
 
-# Optional: Push the image to Docker Hub (uncomment if needed)
+# Login to Docker Hub
+echo "dckr_pat_bjhsjC32LQTdF7CJj37Nl2b74iY" | docker login --username "karthiksivakumar0114" --password-stdin
+if [ $? -ne 0 ]; then
+  echo "Docker login failed!"
+  exit 1
+fi
+
+# Push the image to Docker Hub
 echo "Pushing Docker image to Docker Hub..."
 docker push $IMAGE_NAME:$TAG
 if [ $? -eq 0 ]; then
@@ -26,3 +33,4 @@ else
   echo "Container deployment failed!"
   exit 1
 fi
+
