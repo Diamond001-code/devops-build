@@ -1,10 +1,7 @@
 #!/bin/bash
 
-# Log in to Docker Hub using environment variables from GitHub Actions
-echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+# Log in to Docker Hub using environment variables
+echo "dckr_pat_bjmeR0hYBq8ZGhyqTZxwVRVMY_U" | docker login --username "karthiksivakumar0114" --password-stdin
 
 # Push the Docker image to Docker Hub
-docker push "$DOCKER_REPO:latest"
-
-# Logout from Docker Hub (optional but good practice)
-docker logout
+docker push "karthiksivakumar0114/dev:latest"
