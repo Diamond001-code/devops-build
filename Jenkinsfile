@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_CREDENTIALS = 'docker-hub-credentials'  // The ID of the credentials you created in Jenkins
+        DOCKER_CREDENTIALS = 'docker-hub-credentials'  // This must match the ID you set for Docker Hub credentials in Jenkins
     }
 
     stages {
@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script {
                     // Build the Docker image using the Dockerfile in your repository
-                    sh "docker build -t myusername/myimage:latest ."
+                    sh "docker build -t karthiksivakumar0114/myimage:latest ."
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     // Push the built Docker image to Docker Hub
-                    sh "docker push myusername/myimage:latest"
+                    sh "docker push karthiksivakumar0114/myimage:latest"
                 }
             }
         }
