@@ -30,7 +30,7 @@ pipeline {
         stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
-                    // Push the built Docker image to Docker Hub
+                    
                     sh "docker push karthiksivakumar0114/myimage:latest"
                 }
             }
