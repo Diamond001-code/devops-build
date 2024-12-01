@@ -16,7 +16,7 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                sh './deploy.sh' // Deploys the application to your server
+                sh './deploy.sh' // 
             }
         }
     }
