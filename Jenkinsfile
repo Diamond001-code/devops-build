@@ -2,19 +2,21 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_CREDENTIALS = 'docker-hub-credentials'  // This should match the credentials ID created in Jenkins
-        IMAGE_NAME = 'karthiksivakumar0114/myimage'  // Docker image name with your Docker Hub username
+        DOCKER_CLI_EXPERIMENTAL = 'enabled'
     }
 
     stages {
+        stage('Declarative: Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Check Docker Installation') {
             steps {
                 script {
-                    // Check if Docker is installed and accessible
-                    def dockerInstalled = sh(script: 'docker --version', returnStatus: true)
-                    if (dockerInstalled != 0) {
-                        error "Docker is not installed or not accessible on this Jenkins agent."
-                    }
+                    // Check if Docker is installed using the `bat` command for Windows
+                    bat 'docker --version'
                 }
             }
         }
@@ -22,10 +24,9 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    // Using Jenkins' credentials store for security
-                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        // Login to Docker Hub using the credentials stored in Jenkins
-                        sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin"
+                    // Login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        bat "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
                     }
                 }
             }
@@ -34,14 +35,9 @@ pipeline {
         stage('Get Git Commit ID') {
             steps {
                 script {
-                    // Check if the repository is connected to Git and get the commit ID
-                    if (env.GIT_COMMIT) {
-                        echo "Git commit ID: ${env.GIT_COMMIT}"
-                    } else {
-                        echo "No Git commit ID found, using 'latest' as the tag."
-                        // If GIT_COMMIT is not available, default to 'latest' as the image tag
-                        env.GIT_COMMIT = 'latest'
-                    }
+                    // Get the Git commit ID
+                    def commitId = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                    echo "Current commit ID: ${commitId}"
                 }
             }
         }
@@ -49,8 +45,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Build the Docker image, tag it with your username, image name, and Git commit ID (or 'latest' if no commit ID)
-                    sh "docker build -t ${IMAGE_NAME}:${env.GIT_COMMIT} ."
+                    // Build the Docker image
+                    bat 'docker build -t myimage:${commitId} .'
                 }
             }
         }
@@ -59,7 +55,7 @@ pipeline {
             steps {
                 script {
                     // Push the Docker image to Docker Hub
-                    sh "docker push ${IMAGE_NAME}:${env.GIT_COMMIT}"
+                    bat "docker push myimage:${commitId}"
                 }
             }
         }
@@ -67,17 +63,15 @@ pipeline {
 
     post {
         always {
-            // Cleanup actions or notifications can be placed here
-            echo "Pipeline finished."
+            echo 'Pipeline finished.'
         }
-        success {
-            echo "Docker image successfully pushed to Docker Hub."
-        }
+
         failure {
-            echo "Pipeline failed."
+            echo 'Pipeline failed.'
         }
     }
 }
+
 
 
 
