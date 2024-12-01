@@ -21,9 +21,9 @@ pipeline {
         stage('Login to Docker Hub') {
             steps {
                 script {
-                    // Using 'withCredentials' to securely pass credentials to the Docker login command
+                    // Securely use credentials with 'withCredentials'
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        bat "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}"
+                        bat '''echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin'''
                     }
                 }
             }
