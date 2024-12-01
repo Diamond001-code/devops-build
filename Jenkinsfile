@@ -2,27 +2,26 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_USERNAME = 'myusername'
-        IMAGE_NAME = 'myimage'
-        BUILD_TAG = 'latest'
+        DOCKER_CREDENTIALS = 'docker-hub-credentials'  // The ID of the credentials you created in Jenkins
     }
 
     stages {
-       stage('Clone Repository') {
-    steps {
-        git branch: 'dev', url: 'https://github.com/Diamond001-code/devops-build.git'
-    }
-}
-
-
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    // Use credentials stored in Jenkins and login to Docker Hub
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin"
+                    }
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat '''
-                        docker build -t %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:%BUILD_TAG% .
-                        docker tag %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:%BUILD_TAG% %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:latest
-                    '''
+                    // Build the Docker image using the Dockerfile in your repository
+                    sh "docker build -t myusername/myimage:latest ."
                 }
             }
         }
@@ -30,14 +29,12 @@ pipeline {
         stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
-                    bat '''
-                        docker login -u %DOCKER_HUB_USERNAME% -p %DOCKER_HUB_PASSWORD%
-                        docker push %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:%BUILD_TAG%
-                        docker push %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:latest
-                    '''
+                    // Push the built Docker image to Docker Hub
+                    sh "docker push myusername/myimage:latest"
                 }
             }
         }
     }
 }
+
 
