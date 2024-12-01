@@ -1,11 +1,7 @@
-version: "3.8"
-
+version: '3.8'
 services:
-  react-app:
-    build:
-      context: . # Path to the directory containing the Dockerfile
-      dockerfile: Dockerfile # Optional: Specify the Dockerfile name
-    container_name: devops-build-task
+  nginx:
+    image: guvireactapp
+    container_name: capstone
     ports:
       - "80:80"
-    restart: unless-stopped

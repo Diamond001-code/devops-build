@@ -2,22 +2,25 @@ pipeline {
     agent any
 
     stages {
-        stage('Build Docker Image') {
+        stage('Build Dev Image') {
+           
             steps {
-                sh './build.sh' 
+                script {
+                    sh 'chmod +x build.sh'
+                    sh './build.sh'
+                }
             }
         }
 
-        stage('Push to Docker Hub') {
+        stage('Push Dev Image') {
+           
             steps {
-                sh 'docker push karthiksivakumar0114/prod'
+                script {
+                    sh 'chmod +x deploy.sh'
+                    sh './deploy.sh'
+                }
             }
         }
 
-        stage('Deploy Application') {
-            steps {
-                sh './deploy.sh' // 
-            }
-        }
     }
 }
