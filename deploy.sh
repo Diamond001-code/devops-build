@@ -7,10 +7,10 @@ docker-compose up -d
 
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 if [ "$GIT_BRANCH" == "origin/dev" ]; then
-docker tag guvireactapp natarasannaveen/dev:app1
-docker push natarasannaveen/dev:app1
+docker tag guvireactapp Karthiksivakumar0114/dev:app1
+docker push Karthiksivakumar0114/dev:app1
 
 elif [ "$GIT_BRANCH" == "origin/main" ]; then
-docker tag guvireactapp natarasannaveen/prod:app2
-docker push natarasannaveen/prod:app2
+docker tag guvireactapp Karthiksivakumar0114/prod:app2
+docker push Karthiksivakumar0114/prod:app2
 fi
