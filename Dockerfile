@@ -1,17 +1,11 @@
-# Use an official Nginx image
-FROM nginx:stable-alpine
+# Selecting the base image
+FROM nginx:alpine
 
-# Set the working directory inside the container
-WORKDIR /usr/share/nginx/html
-
-# Remove the default Nginx static files
-RUN rm -rf ./*
-
-# Copy the production build files into the container
+# Copying build to the workdir and installing packages
 COPY build/ /usr/share/nginx/html
 
-# Expose port 80 for HTTP traffic
+# Expose port on
 EXPOSE 80
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Exicuting the application after creating image
+CMD ["nginx", "-g", "daemon off;"] 

@@ -1,5 +1,7 @@
+version: '3.8'
 services:
-  devops-build-task:
-    image: karthiksivakumar0114/dev:latest
+  nginx:
+    image: guvireactapp
+    container_name: capstone
     ports:
       - "80:80"
