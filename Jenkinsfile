@@ -8,11 +8,12 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repository') {
+       stage('Clone Repository') {
     steps {
-        git 'https://github.com/Diamond001-code/devops-build.git'  
+        git branch: 'dev', url: 'https://github.com/Diamond001-code/devops-build.git'
     }
 }
+
 
 
         stage('Build Docker Image') {
