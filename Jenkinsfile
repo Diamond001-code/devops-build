@@ -2,51 +2,37 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('docker-hub-credentials')  
+        DOCKER_HUB_USERNAME = 'myusername'
+        IMAGE_NAME = 'myimage'
+        BUILD_TAG = 'latest'
     }
 
     stages {
+        stage('Clone Repository') {
+            steps {
+                git 'https://github.com/your-repository-url.git'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
-                    // Login to Docker Hub
-                    sh "echo $DOCKER_HUB_CREDENTIALS_PSW | docker login --username $DOCKER_HUB_CREDENTIALS_USR --password-stdin"
-
-                    // Build Docker image
-                    bat '"C:\\Program Files\\Git\\bin\\bash.exe" ./build.sh'
+                    bat '''
+                        docker build -t %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:%BUILD_TAG% .
+                        docker tag %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:%BUILD_TAG% %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:latest
+                    '''
                 }
             }
         }
 
-        stage('Push to Docker Hub') {
+        stage('Push Docker Image to Docker Hub') {
             steps {
                 script {
-                    // Push Docker image to Docker Hub
-                    bat '"C:\\Program Files\\Git\\bin\\bash.exe" ./push.sh'
-                }
-            }
-        }
-
-        stage('Deploy Application') {
-            steps {
-                script {
-                    // Deploy the Docker container using Docker Compose or Docker commands
-                    bat '"C:\\Program Files\\Git\\bin\\bash.exe" ./deploy.sh'
-                }
-            }
-        }
-
-        stage('Check Container Status') {
-            steps {
-                script {
-                    // Check if the container is running
-                    def result = bat(script: 'docker ps --filter "name=devops-build-task" --format "{{.Names}}"', returnStdout: true).trim()
-                    
-                    if (result == 'devops-build-task') {
-                        echo "Container is running successfully."
-                    } else {
-                        error "Container is not running."
-                    }
+                    bat '''
+                        docker login -u %DOCKER_HUB_USERNAME% -p %DOCKER_HUB_PASSWORD%
+                        docker push %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:%BUILD_TAG%
+                        docker push %DOCKER_HUB_USERNAME%/%IMAGE_NAME%:latest
+                    '''
                 }
             }
         }
