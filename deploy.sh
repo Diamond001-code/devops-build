@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Running the Doc-con by running docker-compose
-docker-compose up -d
+#docker-compose up -d
 
 #Docker image push to dockerhub
 
