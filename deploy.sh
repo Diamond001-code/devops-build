@@ -9,7 +9,7 @@ if [[ $GIT_BRANCH == "origin/dev" ]]; then
         docker tag test karthiksivakumar0114/dev
         docker push karthiksivakumar0114/dev
 
-if [[ $GIT_BRANCH == "origin/main" ]]; then
+if [[ $GIT_BRANCH == "origin/master" ]]; then
         sh 'chmod +x build.sh'
         sh './build.sh'
 
