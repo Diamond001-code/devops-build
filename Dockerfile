@@ -1,7 +1,7 @@
 # Selecting the base image
 FROM nginx:alpine
 
-# Copying build to the workdir and installing packages
+# Copying build to the workdir and installing package
 COPY build/ /usr/share/nginx/html
 
 
