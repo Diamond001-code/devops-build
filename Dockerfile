@@ -7,5 +7,5 @@ COPY build/ /usr/share/nginx/html
 
 EXPOSE 80
 
-# Exicuting the application after creating image
+
 CMD ["nginx", "-g", "daemon off;"] 
