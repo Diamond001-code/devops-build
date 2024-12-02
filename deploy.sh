@@ -1,16 +1,21 @@
 #!/bin/bash
 
-#Running the Doc-con by running docker-compose
-docker-compose up -d
+docker login -u karthiksivakumar0114  -p dckr_pat_pMAsmOeEalehL_PdwSyBKwD2-7I
 
-#Docker image push to dockerhub
+if [[ $GIT_BRANCH == "origin/dev" ]]; then
+       sh 'chmod +x build.sh'
+       sh './build.sh'
 
-docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-if [ "$GIT_BRANCH" == "origin/dev" ]; then
-docker tag guvireactapp Karthiksivakumar0114/dev:app1
-docker push Karthiksivakumar0114/dev:app1
+        docker tag test karthiksivakumar0114/dev
+        docker push karthiksivakumar0114/dev
 
-elif [ "$GIT_BRANCH" == "origin/main" ]; then
-docker tag guvireactapp Karthiksivakumar0114/prod:app2
-docker push Karthiksivakumar0114/prod:app2
+if [[ $GIT_BRANCH == "origin/main" ]]; then
+        sh 'chmod +x build.sh'
+        sh './build.sh'
+
+        docker tag test karthiksivakumar0114/prod
+        docker push karthiksivakumar0114/prod
+
+else
+        echo "failed"
 fi
