@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker build -t guvireactapp .
+docker build -t test .
