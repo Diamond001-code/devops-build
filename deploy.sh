@@ -15,4 +15,4 @@ elif [ $GIT_BRANCH == "master" ]; then
 
         docker tag test karthiksivakumar0114/prod
         docker push karthiksivakumar0114/prod
-
+fi
